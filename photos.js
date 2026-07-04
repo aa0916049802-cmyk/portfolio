@@ -5,11 +5,11 @@ window.SECTIONS = {
 
   ],
   inspiration: [
-    "photos/01-湖谷之光.jpg",
-    "photos/02-雾中林道.jpg",
-    "photos/03-烛光晚宴.jpg",
-    "photos/04-青山野花.jpg",
-    "photos/05-海港落日.jpg",
+    "photos/01-林间光束.jpg",
+    "photos/02-雾中拱道.jpg",
+    "photos/03-烛光少女.jpg",
+    "photos/04-蓝调层峦.jpg",
+    "photos/05-金色海鸥.jpg",
     "photos/06-林间白裙.jpg"
   ]
 };
