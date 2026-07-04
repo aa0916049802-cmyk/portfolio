@@ -2,576 +2,371 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>光影集 · Photography</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@300;500&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>光影集 · 3D 展览馆</title>
 <style>
-  :root {
-    --bg: #0a0a0c;
-    --bg-soft: #101014;
-    --ink: #e8e4dc;
-    --ink-dim: #8a867e;
-    --accent: #c9a468;
-    --serif: "Cormorant Garamond", "Noto Serif SC", "SimSun", serif;
-    --sans: "Inter", "Microsoft YaHei", sans-serif;
-  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html, body { height: 100%; }
   body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-weight: 300;
-    overflow-x: hidden;
-  }
-
-  /* ---- 胶片颗粒 ---- */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: -50%;
-    width: 200%;
-    height: 200%;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.05;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
-    animation: grain 0.8s steps(4) infinite;
-  }
-  @keyframes grain {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(-2%, 3%); }
-    50% { transform: translate(3%, -2%); }
-    75% { transform: translate(-3%, -3%); }
-    100% { transform: translate(2%, 2%); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    body::after, .scroll-cue { animation: none !important; }
-  }
-
-  /* ---- 导航 ---- */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.6rem 3rem;
-    background: linear-gradient(to bottom, rgba(10,10,12,0.85), transparent);
-  }
-  nav .logo {
-    font-family: var(--serif);
-    font-size: 1.3rem;
-    letter-spacing: 0.35em;
-    color: var(--ink);
-    text-decoration: none;
-  }
-  nav .links a {
-    color: var(--ink-dim);
-    text-decoration: none;
-    font-size: 0.78rem;
-    letter-spacing: 0.25em;
-    margin-left: 2.5rem;
-    text-transform: uppercase;
-    transition: color 0.3s;
-  }
-  nav .links a:hover, nav .links a:focus-visible { color: var(--accent); }
-
-  /* ---- Hero ---- */
-  header {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    background:
-      radial-gradient(ellipse 80% 55% at 50% 42%, rgba(201,164,104,0.07), transparent 65%),
-      radial-gradient(ellipse 100% 70% at 50% 110%, rgba(30,45,70,0.35), transparent 70%),
-      var(--bg);
-  }
-  header::before, header::after {
-    content: "";
-    position: absolute;
-    left: 0; right: 0;
-    height: 7vh;
-    background: #000;
-    z-index: 2;
-  }
-  header::before { top: 0; }
-  header::after { bottom: 0; }
-
-  .hero-kicker {
-    font-size: 0.72rem;
-    letter-spacing: 0.6em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 2rem;
-    opacity: 0;
-    animation: rise 1.4s 0.3s cubic-bezier(0.16,1,0.3,1) forwards;
-  }
-  h1 {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: clamp(3rem, 9vw, 7rem);
-    letter-spacing: 0.18em;
-    text-indent: 0.18em;
-    line-height: 1.1;
-    opacity: 0;
-    animation: rise 1.4s 0.55s cubic-bezier(0.16,1,0.3,1) forwards;
-  }
-  .hero-sub {
-    margin-top: 2.2rem;
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: clamp(0.95rem, 2vw, 1.15rem);
-    color: var(--ink-dim);
-    letter-spacing: 0.12em;
-    opacity: 0;
-    animation: rise 1.4s 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
-  }
-  @keyframes rise {
-    from { opacity: 0; transform: translateY(28px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .scroll-cue {
-    position: absolute;
-    bottom: 10vh;
-    left: 50%;
-    width: 1px;
-    height: 52px;
-    background: linear-gradient(to bottom, transparent, var(--accent));
-    animation: cue 2.2s ease-in-out infinite;
-    z-index: 3;
-  }
-  @keyframes cue {
-    0%, 100% { transform: scaleY(0.4); transform-origin: top; opacity: 0.3; }
-    50% { transform: scaleY(1); opacity: 1; }
-  }
-
-  /* ---- 画廊 ---- */
-  main {
-    max-width: 1500px;
-    margin: 0 auto;
-    padding: 7rem 2.5rem 2rem;
-  }
-  section.gallery { margin-bottom: 5rem; }
-  .section-head {
-    display: flex;
-    align-items: baseline;
-    gap: 1.6rem;
-    margin-bottom: 1.2rem;
-  }
-  .section-head h2 {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: 2rem;
-    letter-spacing: 0.3em;
-    white-space: nowrap;
-  }
-  .section-head .rule {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, rgba(201,164,104,0.4), transparent);
-  }
-  .section-head .count {
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    color: var(--ink-dim);
-    white-space: nowrap;
-  }
-  .section-note {
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    color: var(--ink-dim);
-    margin-bottom: 2.6rem;
-  }
-
-  .grid {
-    columns: 3;
-    column-gap: 1.6rem;
-  }
-  @media (max-width: 1000px) { .grid { columns: 2; } }
-  @media (max-width: 620px) {
-    .grid { columns: 1; }
-    nav { padding: 1.2rem 1.5rem; }
-    nav .links a { margin-left: 1.2rem; }
-    main { padding: 5rem 1.2rem 1rem; }
-  }
-
-  figure.work {
-    break-inside: avoid;
-    margin-bottom: 2.2rem;
-    cursor: pointer;
-    opacity: 0;
-    transform: translateY(34px);
-    transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
-  }
-  figure.work.shown { opacity: 1; transform: translateY(0); }
-  figure.work .frame {
-    position: relative;
+    background: #060607;
     overflow: hidden;
-    background: var(--bg-soft);
+    font-family: Georgia, "Noto Serif SC", "SimSun", serif;
+    touch-action: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
-  figure.work img {
-    display: block;
-    width: 100%;
-    height: auto;
-    filter: saturate(0.92) contrast(1.04) brightness(0.96);
-    transition: transform 1.1s cubic-bezier(0.16,1,0.3,1), filter 0.6s;
+  canvas { display: block; }
+  .ui { position: fixed; width: 100%; text-align: center; color: #e8e4dc; pointer-events: none; z-index: 10; transition: opacity 0.5s; }
+  .ui.top { top: 6vh; }
+  .ui .kicker { font-family: sans-serif; font-size: 0.68rem; letter-spacing: 0.6em; color: #c9a468; text-transform: uppercase; }
+  .ui h1 { font-weight: 400; font-size: clamp(1.6rem, 5vw, 2.4rem); letter-spacing: 0.35em; margin-top: 0.7rem; text-shadow: 0 4px 30px rgba(0,0,0,0.9); }
+  .ui.bottom { bottom: 4vh; font-family: sans-serif; font-size: 0.7rem; letter-spacing: 0.22em; color: #8a867e; padding: 0 1rem; }
+  .classic-link {
+    position: fixed; top: 1.2rem; right: 1.4rem; z-index: 200;
+    font-family: sans-serif; font-size: 0.72rem; letter-spacing: 0.2em;
+    color: #8a867e; text-decoration: none;
+    border: 1px solid rgba(138,134,126,0.35); padding: 0.5em 1.1em; border-radius: 2em;
+    background: rgba(6,6,7,0.55);
   }
-  /* 电影感悬停：轻微放大 + 提亮 + 上下压黑边 */
-  figure.work .frame::before, figure.work .frame::after {
-    content: "";
-    position: absolute;
-    left: 0; right: 0;
-    height: 0;
-    background: #000;
-    z-index: 2;
-    transition: height 0.55s cubic-bezier(0.16,1,0.3,1);
-    pointer-events: none;
+  .classic-link:hover { color: #c9a468; border-color: #c9a468; }
+  .walk-btn {
+    position: fixed; bottom: 4.5vh; z-index: 150;
+    width: 62px; height: 62px; border-radius: 50%;
+    border: 1px solid rgba(201,164,104,0.5);
+    background: rgba(10,10,12,0.55);
+    color: #c9a468; font-size: 1.4rem;
+    display: none;
+    align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
   }
-  figure.work .frame::before { top: 0; }
-  figure.work .frame::after { bottom: 0; }
-  figure.work:hover .frame::before, figure.work:hover .frame::after { height: 7%; }
-  figure.work:hover img {
-    transform: scale(1.05);
-    filter: saturate(1.04) contrast(1.08) brightness(1.03);
+  .walk-btn:active { background: rgba(201,164,104,0.25); }
+  #btnFwd { right: 5vw; }
+  #btnBack { left: 5vw; }
+  @media (pointer: coarse) {
+    .walk-btn { display: flex; }
+    .ui.bottom { bottom: 13vh; }
   }
-  figure.work figcaption {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 0.9rem 0.2rem 0;
-    font-family: var(--serif);
-    font-size: 0.98rem;
-    letter-spacing: 0.22em;
-    color: var(--ink);
-    transition: color 0.4s;
-  }
-  figure.work:hover figcaption { color: var(--accent); }
-  figure.work figcaption .no {
-    font-family: var(--sans);
-    font-size: 0.65rem;
-    color: var(--ink-dim);
-    letter-spacing: 0.25em;
-  }
-
-  /* ---- 我的作品：空状态 ---- */
-  .empty-works {
-    border: 1px dashed rgba(201,164,104,0.3);
-    padding: 4rem 2rem;
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  .empty-works .line1 {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 1.15rem;
-    letter-spacing: 0.2em;
-    color: var(--ink-dim);
-    margin-bottom: 0.9rem;
-  }
-  .empty-works .line2 {
-    font-size: 0.72rem;
-    letter-spacing: 0.3em;
-    color: rgba(138,134,126,0.6);
-    text-transform: uppercase;
-  }
-
-  /* ---- 占位提示 ---- */
-  .hint {
-    margin: 0 0 3rem;
-    padding: 1.3rem 1.8rem;
-    border: 1px solid rgba(201,164,104,0.25);
-    background: rgba(201,164,104,0.04);
-    font-size: 0.85rem;
-    line-height: 1.9;
-    color: var(--ink-dim);
-    letter-spacing: 0.05em;
-  }
-  .hint b { color: var(--accent); font-weight: 400; }
-  .hint code {
-    color: var(--ink);
-    background: rgba(255,255,255,0.06);
-    padding: 0.1em 0.5em;
-    font-size: 0.8rem;
-  }
-
-  /* ---- 关于 ---- */
-  #about {
-    max-width: 640px;
-    margin: 0 auto;
-    padding: 5rem 2rem 8rem;
-    text-align: center;
-  }
-  #about h2 {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: 1.7rem;
-    letter-spacing: 0.4em;
-    margin-bottom: 2.2rem;
-  }
-  #about p {
-    font-size: 0.92rem;
-    line-height: 2.2;
-    color: var(--ink-dim);
-    letter-spacing: 0.06em;
-  }
-  #about .divider {
-    width: 40px;
-    height: 1px;
-    background: var(--accent);
-    margin: 0 auto 2.2rem;
-  }
-
-  footer {
-    text-align: center;
-    padding: 2.5rem 1rem 3rem;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    font-size: 0.7rem;
-    letter-spacing: 0.3em;
-    color: var(--ink-dim);
-    text-transform: uppercase;
-  }
-
-  /* ---- 灯箱 ---- */
   .lightbox {
-    position: fixed;
-    inset: 0;
-    z-index: 10000;
-    background: rgba(4,4,5,0.96);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s;
-  }
-  .lightbox.open { opacity: 1; pointer-events: auto; }
-  .lightbox img {
-    max-width: 88vw;
-    max-height: 84vh;
-    box-shadow: 0 30px 90px rgba(0,0,0,0.8);
-  }
-  .lightbox .lb-caption {
-    position: absolute;
-    bottom: 3.2rem;
-    left: 0; right: 0;
-    text-align: center;
-    font-family: var(--serif);
-    font-size: 1rem;
-    letter-spacing: 0.25em;
-    color: var(--ink-dim);
-  }
-  .lightbox .lb-counter {
-    position: absolute;
-    top: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.72rem;
-    letter-spacing: 0.35em;
-    color: var(--ink-dim);
-  }
-  .lightbox button {
-    position: absolute;
-    background: none;
-    border: none;
-    color: var(--ink-dim);
-    cursor: pointer;
-    font-family: var(--sans);
-    transition: color 0.3s;
+    position: fixed; inset: 0; background: rgba(4,4,5,0.96);
+    display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 1.2rem;
+    opacity: 0; pointer-events: none; transition: opacity 0.35s; z-index: 300;
     padding: 1rem;
   }
-  .lightbox button:hover, .lightbox button:focus-visible { color: var(--accent); }
-  .lb-close { top: 1.2rem; right: 1.6rem; font-size: 1.6rem; }
-  .lb-prev, .lb-next {
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 2rem;
-    font-weight: 200;
+  .lightbox.open { opacity: 1; pointer-events: auto; }
+  .lightbox img { max-width: 94vw; max-height: 76vh; box-shadow: 0 30px 90px rgba(0,0,0,0.9); }
+  .lightbox .cap { letter-spacing: 0.35em; color: #c9a468; font-size: 0.95rem; }
+  .lightbox .tip { font-family: sans-serif; font-size: 0.65rem; letter-spacing: 0.25em; color: #8a867e; }
+  #loading {
+    position: fixed; inset: 0; background: #060607; z-index: 400;
+    display: flex; flex-direction: column; gap: 1.2rem; justify-content: center; align-items: center;
+    color: #8a867e; letter-spacing: 0.4em; font-size: 0.8rem;
+    transition: opacity 0.6s;
   }
-  .lb-prev { left: 1.2rem; }
-  .lb-next { right: 1.2rem; }
-  @media (max-width: 620px) {
-    .lb-prev { left: 0.2rem; }
-    .lb-next { right: 0.2rem; }
-    .lightbox img { max-width: 96vw; }
-  }
+  #loading .bar { width: 180px; height: 1px; background: rgba(138,134,126,0.25); overflow: hidden; }
+  #loading .bar i { display: block; height: 100%; width: 0%; background: #c9a468; transition: width 0.3s; }
 </style>
 </head>
 <body>
-
-<nav>
-  <a class="logo" href="#">光影集</a>
-  <div class="links">
-    <a href="#works">我的作品</a>
-    <a href="#inspiration">灵感收藏</a>
-    <a href="#about">关于</a>
-  </div>
-</nav>
-
-<header>
-  <div class="hero-kicker">A Cinematic Photography Collection</div>
+<a class="classic-link" href="classic.html">经典版</a>
+<div id="loading"><span>正在布展 …</span><div class="bar"><i id="loadBar"></i></div></div>
+<div class="ui top" id="titleUi">
+  <div class="kicker">A Cinematic Photography Gallery</div>
   <h1>光 影 之 间</h1>
-  <div class="hero-sub">— 每一帧，都是未完成的电影 —</div>
-  <div class="scroll-cue"></div>
-</header>
-
-<main>
-  <div id="hintBox" class="hint" hidden>
-    还没有任何照片。把图片放进 <code>photos</code> 文件夹（自己拍的放进
-    <code>photos\我的作品</code>），然后双击 <code>刷新照片.bat</code>，刷新本页面即可。
-  </div>
-
-  <section class="gallery" id="works">
-    <div class="section-head">
-      <h2>我的作品</h2>
-      <div class="rule"></div>
-      <span class="count" id="worksCount"></span>
-    </div>
-    <div class="section-note">SELECTED WORKS · 快门下的自己</div>
-    <div id="worksEmpty" class="empty-works" hidden>
-      <div class="line1">第一卷胶片，正在路上</div>
-      <div class="line2">Coming Soon · 练习审美中</div>
-    </div>
-    <div class="grid" id="worksGrid"></div>
-  </section>
-
-  <section class="gallery" id="inspiration">
-    <div class="section-head">
-      <h2>灵感收藏</h2>
-      <div class="rule"></div>
-      <span class="count" id="inspCount"></span>
-    </div>
-    <div class="section-note">COLLECTED · 图片收集自网络，用于学习构图与光影，版权归原作者所有</div>
-    <div class="grid" id="inspGrid"></div>
-  </section>
-</main>
-
-<section id="about">
-  <h2>关于</h2>
-  <div class="divider"></div>
-  <p>
-    一个正在路上的摄影学习者。<br>
-    先用眼睛收集光线、阴影与静默的瞬间，<br>
-    再用镜头把它们一一还给世界。<br><br>
-    「我的作品」持续酝酿中，「灵感收藏」是我的审美练习册。
-  </p>
-</section>
-
-<footer>© 2026 光影集 · All Rights Reserved</footer>
-
-<div class="lightbox" id="lightbox">
-  <span class="lb-counter" id="lbCounter"></span>
-  <button class="lb-close" id="lbClose" aria-label="关闭">✕</button>
-  <button class="lb-prev" id="lbPrev" aria-label="上一张">‹</button>
-  <img id="lbImg" src="" alt="">
-  <button class="lb-next" id="lbNext" aria-label="下一张">›</button>
-  <div class="lb-caption" id="lbCaption"></div>
 </div>
-
+<div class="ui bottom" id="hintUi"></div>
+<button class="walk-btn" id="btnFwd" aria-label="前进">▲</button>
+<button class="walk-btn" id="btnBack" aria-label="后退">▼</button>
+<div class="lightbox" id="lb">
+  <img id="lbImg" src="" alt="">
+  <div class="cap" id="lbCap"></div>
+  <div class="tip">点击任意处关闭</div>
+</div>
 <script src="photos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
 <script>
 (function () {
+  if (typeof THREE === "undefined" || !window.WebGLRenderingContext) {
+    location.replace("classic.html");
+    return;
+  }
+  var renderer;
+  try {
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+  } catch (e) {
+    location.replace("classic.html");
+    return;
+  }
+
+  var isTouch = window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
+  document.getElementById("hintUi").textContent = isTouch
+    ? "左右滑动转头 · 上下滑动或按 ▲▼ 走动 · 点画看大图"
+    : "↑↓ / W S 或滚轮走动 · 按住鼠标左右转头 · 走近点击画框看大图";
+
   var sections = window.SECTIONS || { works: [], inspiration: [] };
-  // 兼容旧版 photos.js
-  if (!window.SECTIONS && window.PHOTOS) sections = { works: [], inspiration: window.PHOTOS };
+  var exhibits = [];
+  sections.works.forEach(function (p) { exhibits.push({ src: p, tag: "我的作品" }); });
+  if (!sections.works.length) exhibits.push({ empty: true, tag: "我的作品" });
+  sections.inspiration.forEach(function (p) { exhibits.push({ src: p, tag: "灵感收藏" }); });
 
-  function titleFromPath(p) {
-    var name = decodeURIComponent(p).split("/").pop();
-    return name.replace(/\.[^.]+$/, "").replace(/^\d+[-_.\s]*/, "").replace(/[_-]+/g, " ");
+  function titleOf(p) {
+    return decodeURIComponent(p).split("/").pop().replace(/\.[^.]+$/, "").replace(/^\d+[-_.\s]*/, "");
   }
 
-  var allItems = [];
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x060607);
+  scene.fog = new THREE.Fog(0x060607, 6, 30);
 
-  function buildGrid(list, gridId) {
-    var grid = document.getElementById(gridId);
-    list.forEach(function (p) {
-      var idx = allItems.length;
-      var item = { src: encodeURI(p), title: titleFromPath(p) };
-      allItems.push(item);
+  var camera = new THREE.PerspectiveCamera(64, innerWidth / innerHeight, 0.1, 100);
+  camera.position.set(0, 1.6, 8);
 
-      var fig = document.createElement("figure");
-      fig.className = "work";
-      var frame = document.createElement("div");
-      frame.className = "frame";
-      var img = document.createElement("img");
-      img.loading = "lazy";
-      img.src = item.src;
-      img.alt = item.title;
-      frame.appendChild(img);
-      var cap = document.createElement("figcaption");
-      var no = String(idx + 1).padStart(2, "0");
-      cap.innerHTML = "<span>" + item.title + "</span><span class='no'>NO." + no + "</span>";
-      fig.appendChild(frame);
-      fig.appendChild(cap);
-      fig.addEventListener("click", function () { openLightbox(idx); });
-      grid.appendChild(fig);
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, isTouch ? 1.5 : 2));
+  renderer.shadowMap.enabled = !isTouch;
+  document.body.appendChild(renderer.domElement);
+
+  var HALL_W = 7;
+  var HALL_LEN = Math.max(30, exhibits.length * 4.6 + 18);
+  var Z0 = 10;
+
+  var floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(HALL_W, HALL_LEN),
+    new THREE.MeshStandardMaterial({ color: 0x141416, roughness: 0.25, metalness: 0.55 })
+  );
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.z = Z0 - HALL_LEN / 2;
+  floor.receiveShadow = !isTouch;
+  scene.add(floor);
+
+  var ceil = new THREE.Mesh(
+    new THREE.PlaneGeometry(HALL_W, HALL_LEN),
+    new THREE.MeshStandardMaterial({ color: 0x0a0a0b, roughness: 0.95 })
+  );
+  ceil.rotation.x = Math.PI / 2;
+  ceil.position.set(0, 4, Z0 - HALL_LEN / 2);
+  scene.add(ceil);
+
+  var wallMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.9 });
+  [-1, 1].forEach(function (side) {
+    var wall = new THREE.Mesh(new THREE.PlaneGeometry(HALL_LEN, 4), wallMat);
+    wall.position.set(side * HALL_W / 2, 2, Z0 - HALL_LEN / 2);
+    wall.rotation.y = -side * Math.PI / 2;
+    scene.add(wall);
+  });
+  var endWall = new THREE.Mesh(new THREE.PlaneGeometry(HALL_W, 4), wallMat);
+  endWall.position.set(0, 2, Z0 - HALL_LEN);
+  scene.add(endWall);
+  var backWall = new THREE.Mesh(new THREE.PlaneGeometry(HALL_W, 4), wallMat);
+  backWall.position.set(0, 2, Z0);
+  backWall.rotation.y = Math.PI;
+  scene.add(backWall);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.14));
+  var entranceGlow = new THREE.PointLight(0xc9a468, 0.5, 15);
+  entranceGlow.position.set(0, 3.2, 8);
+  scene.add(entranceGlow);
+
+  function textCanvas(text, sub, w, h, big) {
+    var c = document.createElement("canvas");
+    c.width = w; c.height = h;
+    var ctx = c.getContext("2d");
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#c9a468";
+    ctx.font = (big ? "300 " + h * 0.42 : "300 " + h * 0.34) + "px Georgia, 'Noto Serif SC', serif";
+    var spaced = text.split("").join(" ");
+    ctx.fillText(spaced, w / 2, sub ? h * 0.36 : h / 2);
+    if (sub) {
+      ctx.fillStyle = "#8a867e";
+      ctx.font = "300 " + h * 0.2 + "px sans-serif";
+      ctx.fillText(sub, w / 2, h * 0.74);
+    }
+    var tex = new THREE.CanvasTexture(c);
+    tex.anisotropy = 4;
+    return tex;
+  }
+
+  var endTitle = new THREE.Mesh(
+    new THREE.PlaneGeometry(4.6, 1.15),
+    new THREE.MeshBasicMaterial({ map: textCanvas("光影之间", "GALLERY OF LIGHT AND SHADOW", 1024, 256, true), transparent: true })
+  );
+  endTitle.position.set(0, 2.1, Z0 - HALL_LEN + 0.05);
+  scene.add(endTitle);
+  var endSpot = new THREE.SpotLight(0xffe9c4, 1.6, 12, 0.6, 0.6, 1.2);
+  endSpot.position.set(0, 3.9, Z0 - HALL_LEN + 3.5);
+  endSpot.target = endTitle;
+  scene.add(endSpot);
+
+  var loader = new THREE.TextureLoader();
+  var frames = [];
+  var loadTotal = exhibits.filter(function (e) { return !e.empty; }).length;
+  var loadCount = 0;
+  var loadBar = document.getElementById("loadBar");
+
+  function done() {
+    loadCount++;
+    loadBar.style.width = Math.round(loadCount / Math.max(1, loadTotal) * 100) + "%";
+    if (loadCount >= loadTotal) {
+      var el = document.getElementById("loading");
+      el.style.opacity = 0;
+      setTimeout(function () { el.remove(); }, 700);
+    }
+  }
+  if (loadTotal === 0) {
+    var el = document.getElementById("loading");
+    el.style.opacity = 0;
+    setTimeout(function () { el.remove(); }, 700);
+  }
+
+  function hangPlaque(side, z, text, sub) {
+    var plaque = new THREE.Mesh(
+      new THREE.PlaneGeometry(1.1, 0.28),
+      new THREE.MeshBasicMaterial({ map: textCanvas(text, sub, 512, 128, false), transparent: true })
+    );
+    plaque.position.set(side * (HALL_W / 2 - 0.03), 0.72, z);
+    plaque.rotation.y = -side * Math.PI / 2;
+    scene.add(plaque);
+  }
+
+  function addSpot(side, z, target, intensity) {
+    var spot = new THREE.SpotLight(0xffe9c4, intensity, 9, 0.5, 0.55, 1.2);
+    spot.position.set(side * (HALL_W / 2 - 1.6), 3.85, z);
+    spot.target = target;
+    spot.castShadow = !isTouch;
+    scene.add(spot);
+  }
+
+  exhibits.forEach(function (ex, i) {
+    var side = i % 2 === 0 ? -1 : 1;
+    var z = 4 - i * 4.6;
+
+    if (ex.empty) {
+      var eg = new THREE.Mesh(
+        new THREE.BoxGeometry(2.3, 1.7, 0.07),
+        new THREE.MeshStandardMaterial({ color: 0x8a6f3d, roughness: 0.35, metalness: 0.7 })
+      );
+      eg.position.set(side * (HALL_W / 2 - 0.06), 1.9, z);
+      eg.rotation.y = -side * Math.PI / 2;
+      var inner = new THREE.Mesh(
+        new THREE.PlaneGeometry(2.06, 1.46),
+        new THREE.MeshStandardMaterial({ color: 0x121214, roughness: 0.9 })
+      );
+      inner.position.z = 0.043;
+      eg.add(inner);
+      var soon = new THREE.Mesh(
+        new THREE.PlaneGeometry(1.9, 0.5),
+        new THREE.MeshBasicMaterial({ map: textCanvas("第一卷胶片，正在路上", "COMING SOON", 768, 192, false), transparent: true })
+      );
+      soon.position.z = 0.05;
+      eg.add(soon);
+      scene.add(eg);
+      addSpot(side, z, eg, 1.6);
+      hangPlaque(side, z, "我的作品", "MY WORKS · 虚位以待");
+      return;
+    }
+
+    loader.load(encodeURI(ex.src), function (tex) {
+      var ratio = tex.image.width / tex.image.height;
+      var h = 2.0, w = h * ratio;
+      if (w > 3.3) { w = 3.3; h = w / ratio; }
+
+      var frame = new THREE.Mesh(
+        new THREE.BoxGeometry(w + 0.16, h + 0.16, 0.07),
+        new THREE.MeshStandardMaterial({ color: 0x2b241a, roughness: 0.4, metalness: 0.6 })
+      );
+      frame.position.set(side * (HALL_W / 2 - 0.06), 1.9, z);
+      frame.rotation.y = -side * Math.PI / 2;
+      var pic = new THREE.Mesh(
+        new THREE.PlaneGeometry(w, h),
+        new THREE.MeshStandardMaterial({ map: tex, roughness: 0.65 })
+      );
+      pic.position.z = 0.043;
+      frame.add(pic);
+      frame.userData = { src: ex.src, title: titleOf(ex.src) };
+      scene.add(frame);
+      frames.push(frame);
+      addSpot(side, z, frame, 2.2);
+      hangPlaque(side, z, titleOf(ex.src), ex.tag === "我的作品" ? "MY WORK" : "COLLECTED · 图片来自网络");
+      done();
+    }, undefined, done);
+  });
+
+  var vz = 0, yaw = 0, targetYaw = 0, keys = {}, moveInput = 0;
+  document.addEventListener("keydown", function (e) { keys[e.key.toLowerCase()] = true; });
+  document.addEventListener("keyup", function (e) { keys[e.key.toLowerCase()] = false; });
+
+  function bindWalk(btn, dir) {
+    ["pointerdown", "touchstart"].forEach(function (ev) {
+      btn.addEventListener(ev, function (e) { e.preventDefault(); moveInput = dir; }, { passive: false });
+    });
+    ["pointerup", "pointerleave", "touchend", "touchcancel"].forEach(function (ev) {
+      btn.addEventListener(ev, function () { moveInput = 0; });
     });
   }
+  bindWalk(document.getElementById("btnFwd"), -1);
+  bindWalk(document.getElementById("btnBack"), 1);
 
-  buildGrid(sections.works, "worksGrid");
-  buildGrid(sections.inspiration, "inspGrid");
+  var dragging = false, lastX = 0, lastY = 0, movedDist = 0;
+  renderer.domElement.addEventListener("pointerdown", function (e) {
+    dragging = true; lastX = e.clientX; lastY = e.clientY; movedDist = 0;
+  });
+  window.addEventListener("pointermove", function (e) {
+    if (!dragging) return;
+    var dx = e.clientX - lastX;
+    var dy = e.clientY - lastY;
+    lastX = e.clientX; lastY = e.clientY;
+    movedDist += Math.abs(dx) + Math.abs(dy);
+    targetYaw -= dx * 0.0042;
+    if (isTouch) vz += dy * 0.00085;
+  });
+  window.addEventListener("pointerup", function () { dragging = false; });
+  window.addEventListener("wheel", function (e) { vz += e.deltaY * 0.0012; }, { passive: true });
 
-  document.getElementById("worksCount").textContent =
-    sections.works.length ? sections.works.length + " 帧" : "酝酿中";
-  document.getElementById("inspCount").textContent = sections.inspiration.length + " 帧";
-  if (!sections.works.length) document.getElementById("worksEmpty").hidden = false;
-  if (!sections.works.length && !sections.inspiration.length) {
-    document.getElementById("hintBox").hidden = false;
-  }
-
-  var observer = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) {
-        e.target.classList.add("shown");
-        observer.unobserve(e.target);
+  var ray = new THREE.Raycaster();
+  var mouse = new THREE.Vector2();
+  renderer.domElement.addEventListener("click", function (e) {
+    if (movedDist > 10) return;
+    mouse.set((e.clientX / innerWidth) * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+    ray.setFromCamera(mouse, camera);
+    var hits = ray.intersectObjects(frames, true);
+    if (hits.length) {
+      var obj = hits[0].object;
+      while (obj && !(obj.userData && obj.userData.src)) obj = obj.parent;
+      if (obj && camera.position.distanceTo(obj.position) < 8) {
+        document.getElementById("lbImg").src = encodeURI(obj.userData.src);
+        document.getElementById("lbCap").textContent = obj.userData.title;
+        document.getElementById("lb").classList.add("open");
       }
-    });
-  }, { threshold: 0.12 });
-  document.querySelectorAll("figure.work").forEach(function (f) { observer.observe(f); });
+    }
+  });
+  document.getElementById("lb").addEventListener("click", function () { this.classList.remove("open"); });
 
-  var lb = document.getElementById("lightbox");
-  var lbImg = document.getElementById("lbImg");
-  var lbCaption = document.getElementById("lbCaption");
-  var lbCounter = document.getElementById("lbCounter");
-  var current = 0;
+  var titleUi = document.getElementById("titleUi");
+  var minZ = Z0 - HALL_LEN + 1.4, maxZ = 8.6;
 
-  function openLightbox(i) {
-    current = i;
-    render();
-    lb.classList.add("open");
-    document.body.style.overflow = "hidden";
+  function animate() {
+    requestAnimationFrame(animate);
+    var accel = 0;
+    if (keys["w"] || keys["arrowup"]) accel = -0.012;
+    if (keys["s"] || keys["arrowdown"]) accel = 0.012;
+    if (moveInput) accel = moveInput * 0.012;
+    vz += accel;
+    vz *= 0.9;
+    yaw += (targetYaw - yaw) * 0.12;
+    camera.rotation.y = yaw;
+    camera.position.x += Math.sin(yaw) * vz * -1;
+    camera.position.z += Math.cos(yaw) * vz;
+    camera.position.x = Math.max(-HALL_W / 2 + 0.7, Math.min(HALL_W / 2 - 0.7, camera.position.x));
+    camera.position.z = Math.max(minZ, Math.min(maxZ, camera.position.z));
+    camera.position.y = 1.6 + Math.sin(Date.now() * 0.0016) * 0.012;
+    titleUi.style.opacity = Math.max(0, Math.min(1, (camera.position.z - 2) / 5));
+    renderer.render(scene, camera);
   }
-  function closeLightbox() {
-    lb.classList.remove("open");
-    document.body.style.overflow = "";
-  }
-  function render() {
-    var item = allItems[current];
-    lbImg.src = item.src;
-    lbImg.alt = item.title;
-    lbCaption.textContent = item.title;
-    lbCounter.textContent = (current + 1) + " / " + allItems.length;
-  }
-  function step(d) {
-    current = (current + d + allItems.length) % allItems.length;
-    render();
-  }
+  animate();
 
-  document.getElementById("lbClose").addEventListener("click", closeLightbox);
-  document.getElementById("lbPrev").addEventListener("click", function (e) { e.stopPropagation(); step(-1); });
-  document.getElementById("lbNext").addEventListener("click", function (e) { e.stopPropagation(); step(1); });
-  lb.addEventListener("click", function (e) { if (e.target === lb) closeLightbox(); });
-  document.addEventListener("keydown", function (e) {
-    if (!lb.classList.contains("open")) return;
-    if (e.key === "Escape") closeLightbox();
-    if (e.key === "ArrowLeft") step(-1);
-    if (e.key === "ArrowRight") step(1);
+  window.addEventListener("resize", function () {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
   });
 })();
 </script>
